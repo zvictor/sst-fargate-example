@@ -1,0 +1,40 @@
+{
+  "name": "@sst-fargate-example/deployment",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "./scripts/dev.js",
+    "build": "sst build",
+    "deploy": "sst deploy",
+    "remove": "sst remove",
+    "console": "sst console",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aws-cdk/core": "1.200.0",
+    "@cloudcomponents/cdk-temp-stack": "2.1.0",
+    "aws-cdk-lib": "2.72.1",
+    "chalk": "4.1.2",
+    "constructs": "10.1.156",
+    "p-debounce": "4.0.0",
+    "sst": "2.7.2"
+  },
+  "devDependencies": {
+    "chokidar": "3.5.3",
+    "pm2": "5.3.0",
+    "typescript": "5.0.4"
+  },
+  "overrides": {
+    "chalk": "4.1.2"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "aws-cdk": {
+        "dependencies": {
+          "yaml": "1.10.2"
+        }
+      }
+    }
+  }
+}

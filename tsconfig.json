@@ -1,0 +1,24 @@
+{
+  "extends": "@sindresorhus/tsconfig",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "|*": ["./*"]
+    },
+    "target": "es2022",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "lib": ["es2021"],
+    "types": ["node"],
+    "strict": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "esm": true,
+    "swc": true,
+    "transpileOnly": true
+  }
+}

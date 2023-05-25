@@ -1,0 +1,8 @@
+packages:
+  - 'functions/**/*'
+  - 'packages/**/*'
+  - 'services/**/*'
+  - 'deployment'
+  - '**/deployment'
+
+  - '!**/test/**'
