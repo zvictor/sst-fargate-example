@@ -5,7 +5,6 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
 import * as efs from 'aws-cdk-lib/aws-efs'
 import * as logs from 'aws-cdk-lib/aws-logs'
-import { Config } from 'sst/config.js'
 import { StackContext, EventBus, Queue, Function } from 'sst/constructs'
 import { bind, BaseStack as BaseStackInterface } from '../utils.js'
 import LocalService from '../constructs/localService.js'
@@ -35,9 +34,7 @@ export class BaseStack extends cdk.Stack implements BaseStackInterface {
       allowAllOutbound: true,
     })
 
-    const cluster = new ecs.Cluster(this, `${id}-Cluster`, {
-      vpc,
-    })
+    const cluster = new ecs.Cluster(this, `${id}-Cluster`, { vpc })
 
     const fileSystem = new efs.FileSystem(this, `${id}-FileSystem`, {
       vpc,
@@ -190,8 +187,6 @@ export class FargateStack extends cdk.Stack {
 }
 
 export default async function MyFargateStack(ctx: StackContext) {
-  const MY_SECRET = (await Config.getSecret({ key: 'MY_SECRET' })) ?? ''
-  const REDIS_URL = (await Config.getSecret({ key: 'REDIS_URL' })) ?? ''
   const baseStack = new BaseStack(ctx.app as any, `${ctx.app.stage}-my-service`)
   const bus = new EventBus(ctx.stack, `my-service-events`)
 
@@ -216,8 +211,6 @@ export default async function MyFargateStack(ctx: StackContext) {
       DEBUG_DEPTH: '10',
       NODE_OPTIONS: '--no-warnings --enable-source-maps',
       QUEUE_DESTINATION: queue.queueUrl,
-      REDIS_URL,
-      MY_SECRET,
     },
     memorySize: 128,
     reservedConcurrentExecutions: 1,
@@ -247,9 +240,7 @@ export default async function MyFargateStack(ctx: StackContext) {
     NODE_OPTIONS: `--no-warnings --enable-source-maps --max-old-space-size=${Math.floor(
       (MEMORY_MIB * 4) / 5
     )}`,
-    MY_SECRET,
     SERVICE_ID,
-    REDIS_URL,
   }
 
   let instance
