@@ -7,6 +7,7 @@ import * as efs from 'aws-cdk-lib/aws-efs'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import { StackContext, EventBus, Queue, Function } from 'sst/constructs'
 import { bind, BaseStack as BaseStackInterface } from '../utils.js'
+import CustomConstruct from '../constructs/CustomConstruct.js'
 import LocalService from '../constructs/localService.js'
 
 const MEMORY_MIB = 2048
@@ -70,7 +71,7 @@ export class BaseStack extends cdk.Stack implements BaseStackInterface {
   }
 }
 
-export class FargateStack extends cdk.Stack {
+export class FargateStack extends CustomConstruct(cdk.Stack) {
   public readonly container: ecs.ContainerDefinition
   public readonly service: ecs.FargateService
 
@@ -131,7 +132,10 @@ export class FargateStack extends cdk.Stack {
       memoryReservationMiB: MEMORY_MIB / 2,
       cpu: CPU,
       logging,
-      environment,
+      environment: {
+        ...this.bindingEnvs,
+        ...environment,
+      },
       healthCheck: {
         command: ['CMD-SHELL', `curl -f http://localhost:8080/health || exit 1`],
         interval: cdk.Duration.seconds(30),
